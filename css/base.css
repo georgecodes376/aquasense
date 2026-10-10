@@ -1,26 +1,20 @@
-/* =========================================================
-   AquaSense · base.css
-   Tokens, estructura general, tarjetas, chips, botones,
-   notificaciones y animaciones compartidas.
-   Sistema de diseño: Hydro-Telemetry Interface
-   ========================================================= */
 
-/* ---------- 1. Tokens ---------- */
 :root {
   /* Marca */
-  --primary: #0284c7;          /* Cerulean Flow */
+  --primary: #0284c7;          
   --primary-hover: #0369a1;
   --primary-soft: #e0f2fe;
-  --cyan: #06b6d4;             /* Clear Cyan */
-  --mint: #10b981;             /* Pure Mint */
+  --cyan: #06b6d4;            
+  --mint: #10b981;             
 
-  /* Tinta */
+
+
   --ink: #0f2744;
-  --ink-2: #1e3a5f;            /* Deep Slate Navy */
+  --ink-2: #1e3a5f;          
   --muted: #64748b;
   --muted-2: #94a3b8;
 
-  /* Superficies */
+ 
   --canvas: #f0f7ff;
   --well: #e6f2fc;
   --surface: #ffffff;
@@ -28,28 +22,28 @@
   --border: rgba(2, 132, 199, 0.08);
   --border-strong: rgba(2, 132, 199, 0.18);
 
-  /* Semánticos */
+
   --ok-bg: #ecfdf5;   --ok-ink: #047857;   --ok-line: #a7f3d0;
   --warn-bg: #fffbeb; --warn-ink: #b45309; --warn-line: #fde68a;
   --crit-bg: #fff1f2; --crit-ink: #be123c; --crit-line: #fecdd3;
   --info-bg: #f0f9ff; --info-ink: #0369a1; --info-line: #bae6fd;
 
-  /* Elevación */
+
   --shadow-1: 0 4px 20px -2px rgba(15, 39, 68, 0.04), 0 2px 6px -1px rgba(2, 132, 199, 0.03);
   --shadow-2: 0 12px 32px -4px rgba(15, 39, 68, 0.07), 0 4px 12px -2px rgba(2, 132, 199, 0.08);
   --shadow-3: 0 24px 48px -12px rgba(15, 39, 68, 0.14), 0 8px 20px -4px rgba(2, 132, 199, 0.12);
 
-  /* Forma */
+
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
   --r-xl: 24px;
 
-  /* Tipografía */
+
   --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  /* Layout */
+
   --sidebar-w: 264px;
   --tank-h: 320px;
 }
@@ -85,7 +79,7 @@ code { font-family: var(--mono); }
   color: var(--muted);
 }
 
-/* ---------- 3. Layout general ---------- */
+
 .app { display: flex; min-height: 100vh; }
 
 .main { flex: 1; min-width: 0; margin-left: var(--sidebar-w); }
@@ -111,7 +105,7 @@ code { font-family: var(--mono); }
 .history-card { grid-area: history; }
 .events-card  { grid-area: events; }
 
-/* ---------- 4. Cards ---------- */
+
 .card {
   padding: 28px;
   border: 1px solid var(--border);
@@ -153,7 +147,7 @@ code { font-family: var(--mono); }
 }
 .head-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 
-/* ---------- 5. Chips / badges ---------- */
+
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 4px 12px;
@@ -175,7 +169,7 @@ code { font-family: var(--mono); }
 .chip-lg { padding: 7px 14px; font-size: 13px; text-transform: none; letter-spacing: 0; }
 .mono-chip { font-family: var(--mono); text-transform: none; letter-spacing: 0; }
 
-/* ---------- 6. Botones ---------- */
+
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 42px;
@@ -218,7 +212,7 @@ code { font-family: var(--mono); }
 .btn-lg { height: 52px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; }
 .btn-block { width: 100%; }
 
-/* ---------- 7. Toast ---------- */
+
 .toast {
   position: fixed; left: 50%; bottom: 24px;
   z-index: 60;
@@ -239,7 +233,7 @@ code { font-family: var(--mono); }
 .toast.warn { background: var(--warn-ink); }
 .toast.crit { background: var(--crit-ink); }
 
-/* ---------- 8. Animaciones ---------- */
+
 @keyframes blink   { 50% { opacity: 0.35; } }
 @keyframes wave    { to { transform: translate(-50%, var(--ty)) rotate(360deg); } }
 @keyframes ring {
@@ -254,9 +248,9 @@ code { font-family: var(--mono); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* ---------- 9. Responsive (estructura general) ---------- */
 
-/* Tablet: 2 columnas, historial y eventos abajo a lo ancho */
+
+
 @media (max-width: 1279px) {
   .grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -267,12 +261,11 @@ code { font-family: var(--mono); }
   }
 }
 
-/* El sidebar se vuelve menú deslizable (ver components.css) */
+
 @media (max-width: 1023px) {
   .main { margin-left: 0; }
 }
 
-/* Móvil: 1 columna */
 @media (max-width: 767px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);

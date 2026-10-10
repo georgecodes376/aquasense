@@ -1,10 +1,3 @@
-/* =========================================================
-   AquaSense · components.css
-   Estilos de cada parte del dashboard: sidebar, topbar,
-   franja de estado, tanque, bomba, historial, eventos y ficha técnica.
-   ========================================================= */
-
-/* ---------- 1. Sidebar ---------- */
 .sidebar {
   position: fixed;
   inset: 0 auto 0 0;
@@ -126,7 +119,6 @@
 }
 .backdrop.show { opacity: 1; pointer-events: auto; }
 
-/* ---------- 2. Topbar ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 30;
   display: flex; align-items: center; gap: 16px;
@@ -199,7 +191,6 @@
 .menu-btn, .close-btn { display: none; }
 .close-btn { margin-left: 4px; }
 
-/* ---------- 3. Franja de estado ---------- */
 .status-strip {
   display: flex; align-items: center; flex-wrap: wrap;
   gap: 12px 22px;
@@ -214,7 +205,6 @@
 .strip-item code { color: var(--primary); font-weight: 600; }
 .mode-chip { margin-left: auto; }
 
-/* ---------- 4. Tanque ---------- */
 .tank-stage {
   display: grid;
   grid-template-columns: auto minmax(120px, 170px) 1fr;
@@ -255,7 +245,6 @@
   transition: height 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Oleaje: dos "cuadrados redondeados" girando por encima del agua */
 .tank-water::before,
 .tank-water::after {
   content: "";
@@ -329,7 +318,6 @@
 #trendValue.up   { color: var(--ok-ink); }
 #trendValue.down { color: var(--warn-ink); }
 
-/* Barra de progreso horizontal */
 .level-bar-block { margin-top: 22px; }
 .level-bar-head {
   display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
@@ -362,7 +350,6 @@
 .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .legend .chip { text-transform: none; letter-spacing: 0; font-size: 12px; }
 
-/* ---------- 5. Bomba ---------- */
 .pump-panel {
   display: flex; flex-direction: column; gap: 16px;
   padding: 20px;
@@ -451,7 +438,6 @@
   color: var(--ink);
 }
 
-/* ---------- 6. Historial ---------- */
 .chart-box {
   margin-bottom: 18px;
   padding: 14px 14px 10px;
@@ -516,7 +502,6 @@
 }
 .pump-pill.on { background: var(--ok-bg); color: var(--ok-ink); }
 
-/* ---------- 7. Eventos ---------- */
 .event-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 
 .event {
@@ -541,7 +526,6 @@
 .event.crit { background: var(--crit-bg); border-color: var(--crit-line); }
 .event.crit .ev-ico, .event.crit strong { color: var(--crit-ink); }
 
-/* ---------- 8. Ficha técnica ---------- */
 .spec-strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -551,9 +535,8 @@
 .spec-strip > div { display: flex; flex-direction: column; gap: 2px; }
 .spec-strip code { font-size: 13px; font-weight: 600; color: var(--primary); }
 
-/* ---------- 9. Responsive (componentes) ---------- */
 
-/* Sidebar se vuelve menú deslizable */
+
 @media (max-width: 1023px) {
   .sidebar { transform: translateX(-105%); box-shadow: var(--shadow-3); }
   .sidebar.open { transform: none; }
@@ -561,7 +544,7 @@
   .version { display: none; }
 }
 
-/* Móvil */
+
 @media (max-width: 767px) {
   :root { --tank-h: 270px; }
 
@@ -591,7 +574,7 @@
   .event { grid-template-columns: auto 1fr; }
   .event time { grid-column: 2; }
 
-  /* En pantallas angostas se oculta la columna "Volumen" para que quepa "Estado" */
+
   .data-table th:nth-child(3),
   .data-table td:nth-child(3) { display: none; }
   .data-table th, .data-table td { padding-left: 8px; padding-right: 8px; }

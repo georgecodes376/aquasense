@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#f0f7ff" />
   <title>AquaSense · Dashboard</title>
 
-  <!-- Tipografías del sistema de diseño Hydro-Telemetry -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -16,7 +15,6 @@
 </head>
 <body>
 
-  <!-- ===== Sprite de iconos (se reutilizan con <use href="#id">) ===== -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
       <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s-6 6.4-6 11a6 6 0 0 0 12 0c0-4.6-6-11-6-11z"/></symbol>
@@ -39,7 +37,6 @@
 
   <div class="app">
 
-    <!-- ===================== SIDEBAR ===================== -->
     <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
       <div class="brand">
         <div class="brand-logo"><svg class="ico"><use href="#i-drop"/></svg></div>
@@ -90,7 +87,6 @@
     </aside>
     <div class="backdrop" id="backdrop"></div>
 
-    <!-- ===================== CONTENIDO ===================== -->
     <div class="main">
 
       <header class="topbar">
@@ -122,7 +118,6 @@
 
       <main class="content">
 
-        <!-- Franja de estado general -->
         <section class="card status-strip">
           <span class="chip chip-ok chip-lg" id="statusChip" data-extra="chip-lg"><i class="dot pulse"></i><span>¡Todo en orden!</span></span>
           <div class="strip-item">
@@ -135,7 +130,6 @@
 
         <div class="grid">
 
-          <!-- ========== 1. NIVEL DEL DEPÓSITO ========== -->
           <section class="card tank-card" id="nivel">
             <div class="card-head">
               <div>
@@ -188,7 +182,6 @@
             </div>
           </section>
 
-          <!-- ========== 2. CONTROL DE LA BOMBA ========== -->
           <section class="card pump-card" id="bomba">
             <div class="card-head">
               <div class="head-with-icon">
@@ -283,7 +276,7 @@
             </div>
           </section>
 
-          <!-- ========== EXTRA: REGISTRO DE EVENTOS ========== -->
+
           <section class="card events-card" id="eventos">
             <div class="card-head">
               <div class="head-with-icon">
@@ -299,7 +292,7 @@
           </section>
         </div>
 
-        <!-- Ficha técnica del hardware -->
+
         <section class="card spec-strip">
           <div><span class="label-ui">Microcontrolador</span><code>ESP32-S3 Dual-Core</code></div>
           <div><span class="label-ui">Pin disparo (TRIG)</span><code>GPIO 05</code></div>
@@ -314,8 +307,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- type="module" permite usar import/export entre archivos.
-       Por eso la página se abre con Live Server (no con doble clic). -->
+  
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
