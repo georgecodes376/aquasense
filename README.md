@@ -36,12 +36,12 @@ flowchart LR
 
 - **Hardware (ESP32)**: mide la distancia al agua con el sensor ultrasónico, la convierte en porcentaje de llenado y enciende o apaga la bomba a través de un relé optoaislado.
 - **API HTTP**: el ESP32 expone dos rutas en JSON, una para leer el estado y otra para recibir órdenes. Es el único punto de contacto entre el hardware y la web.
-- **Dashboard web**: consulta la API cada 3 segundos, muestra el nivel, el estado y el historial, y envía las órdenes de la bomba. No contiene lógica de hardware.
+- **Dashboard web**: consulta la API cada 3 segundos, muestra el nivel, el estado y el historial, y envía las órdenes de la bomba. Está dividido en componentes independientes (un archivo por cada parte de la pantalla) y no contiene lógica de hardware.
 - **Persistencia (MySQL)**: almacenará cada lectura con fecha y hora para consultar el historial a largo plazo. *(En integración.)*
 
 ## 🛠️ Tecnologías Utilizadas
 
-- HTML5, CSS3 y JavaScript (ES6+), sin frameworks
+- HTML5, CSS3 y JavaScript (ES6+) con módulos nativos (`import` / `export`), sin frameworks ni compilación
 - SVG para la gráfica del historial y los iconos
 - Google Fonts: Plus Jakarta Sans y JetBrains Mono
 - ESP32-S3 (firmware del prototipo)
@@ -71,29 +71,53 @@ flowchart LR
 | 🟡 Bajo | 20 % a 49 % | Conviene encender la bomba. |
 | 🔴 Crítico | Menos de 20 % | Riesgo de quedarse sin agua. |
 
-Los umbrales se configuran en el objeto `CONFIG` al inicio de `script.js`.
+Los umbrales se configuran en `js/config.js`.
 
 ## 📁 Estructura del Proyecto
 
 ```
 aquasense/
-├── index.html     # Estructura del dashboard
-├── styles.css     # Diseño visual y adaptación a móvil
-├── script.js      # Lógica, simulación y conexión con el ESP32
+├── index.html                  # Estructura de la página
+├── css/
+│   ├── base.css                # Colores, tipografía, tarjetas, chips y botones
+│   └── components.css          # Estilos de cada parte del dashboard
+├── js/
+│   ├── main.js                 # Arranque, ciclo de lectura y automatización
+│   ├── config.js               # IP del ESP32, umbrales y capacidad del tanque
+│   ├── state.js                # Estado compartido de la app
+│   ├── api.js                  # Simulación y comunicación con el ESP32
+│   ├── utils.js                # Funciones de apoyo
+│   └── components/
+│       ├── Sidebar.js          # Menú lateral, enlace MCU y paro de emergencia
+│       ├── Topbar.js           # Barra superior y franja de estado
+│       ├── TankCard.js         # Tanque animado y barra de nivel
+│       ├── PumpControl.js      # Control de la bomba y automatización
+│       ├── HistoryPanel.js     # Gráfica, tabla y exportación a CSV
+│       └── EventLog.js         # Registro de eventos y alertas
 └── README.md
 ```
 
-Conforme se integren las demás partes, se organizarán en carpetas (`dashboard/`, `firmware/`, `database/`, `docs/`) para que cada integrante trabaje en su área sin interferir con las demás.
+El dashboard sigue una organización por componentes, parecida a la de React pero con JavaScript puro:
+
+- **`state.js`:** guarda los datos que comparten todos los componentes.
+- **Cada componente:** exporta una función `init` que conecta sus botones y una función `render` que dibuja su parte de la pantalla.
+- **`main.js`:** pide una lectura nueva cada 3 segundos, actualiza el estado y llama a los `render`.
+
+Así cada integrante puede trabajar en su componente sin interferir con los demás.
+
+Conforme se integren las demás partes del proyecto, se organizarán en carpetas (`dashboard/`, `firmware/`, `database/`, `docs/`).
 
 ## 🚀 Cómo Ejecutarlo
 
-No requiere instalación. Clona o descarga el repositorio y abre `index.html` en el navegador.
+No requiere instalar dependencias. Clona o descarga el repositorio y ábrelo con **Visual Studio Code** y la extensión **Live Server**: clic derecho sobre `index.html` y luego *Open with Live Server*. La página se recarga sola al guardar cambios.
 
-Para desarrollar, se recomienda **Visual Studio Code** con la extensión **Live Server**: clic derecho sobre `index.html` y luego *Open with Live Server*. La página se recarga sola al guardar cambios.
+> **Importante:** como el dashboard usa módulos de JavaScript, **no funciona abriendo `index.html` con doble clic**. Por seguridad, el navegador bloquea los `import` entre archivos locales, así que siempre debe abrirse desde un servidor como Live Server o GitHub Pages.
 
-Por defecto el dashboard corre en **modo simulación**, que genera lecturas de prueba. Para conectarlo al prototipo real, edita `script.js` y cambia `API_BASE` dentro de `CONFIG` de `null` a la IP del ESP32, por ejemplo `'http://192.168.1.50'`. La computadora y el ESP32 deben estar en la misma red WiFi.
+Por defecto el dashboard corre en **modo simulación**, que genera lecturas de prueba. Para conectarlo al prototipo real, edita `js/config.js` y cambia `API_BASE` de `null` a la IP del ESP32, por ejemplo `'http://192.168.1.50'`. La computadora y el ESP32 deben estar en la misma red WiFi.
 
 ## 🔌 API del ESP32
+
+Toda la comunicación con el hardware vive en `js/api.js`.
 
 | Ruta | Método | Descripción | Ejemplo |
 |---|---|---|---|

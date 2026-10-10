@@ -1,0 +1,287 @@
+/* =========================================================
+   AquaSense · base.css
+   Tokens, estructura general, tarjetas, chips, botones,
+   notificaciones y animaciones compartidas.
+   Sistema de diseño: Hydro-Telemetry Interface
+   ========================================================= */
+
+/* ---------- 1. Tokens ---------- */
+:root {
+  /* Marca */
+  --primary: #0284c7;          /* Cerulean Flow */
+  --primary-hover: #0369a1;
+  --primary-soft: #e0f2fe;
+  --cyan: #06b6d4;             /* Clear Cyan */
+  --mint: #10b981;             /* Pure Mint */
+
+  /* Tinta */
+  --ink: #0f2744;
+  --ink-2: #1e3a5f;            /* Deep Slate Navy */
+  --muted: #64748b;
+  --muted-2: #94a3b8;
+
+  /* Superficies */
+  --canvas: #f0f7ff;
+  --well: #e6f2fc;
+  --surface: #ffffff;
+  --line: #f1f5f9;
+  --border: rgba(2, 132, 199, 0.08);
+  --border-strong: rgba(2, 132, 199, 0.18);
+
+  /* Semánticos */
+  --ok-bg: #ecfdf5;   --ok-ink: #047857;   --ok-line: #a7f3d0;
+  --warn-bg: #fffbeb; --warn-ink: #b45309; --warn-line: #fde68a;
+  --crit-bg: #fff1f2; --crit-ink: #be123c; --crit-line: #fecdd3;
+  --info-bg: #f0f9ff; --info-ink: #0369a1; --info-line: #bae6fd;
+
+  /* Elevación */
+  --shadow-1: 0 4px 20px -2px rgba(15, 39, 68, 0.04), 0 2px 6px -1px rgba(2, 132, 199, 0.03);
+  --shadow-2: 0 12px 32px -4px rgba(15, 39, 68, 0.07), 0 4px 12px -2px rgba(2, 132, 199, 0.08);
+  --shadow-3: 0 24px 48px -12px rgba(15, 39, 68, 0.14), 0 8px 20px -4px rgba(2, 132, 199, 0.12);
+
+  /* Forma */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+
+  /* Tipografía */
+  --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Layout */
+  --sidebar-w: 264px;
+  --tank-h: 320px;
+}
+
+/* ---------- 2. Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--canvas);
+  color: var(--ink-2);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+code { font-family: var(--mono); }
+
+.ico {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.ico-sm { width: 16px; height: 16px; }
+
+.label-ui {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- 3. Layout general ---------- */
+.app { display: flex; min-height: 100vh; }
+
+.main { flex: 1; min-width: 0; margin-left: var(--sidebar-w); }
+
+.content {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  grid-template-areas:
+    "tank    history"
+    "pump    events";
+  align-items: start;
+  margin-bottom: 24px;
+}
+.tank-card    { grid-area: tank; }
+.pump-card    { grid-area: pump; }
+.history-card { grid-area: history; }
+.events-card  { grid-area: events; }
+
+/* ---------- 4. Cards ---------- */
+.card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+.card:hover { box-shadow: var(--shadow-2); border-color: var(--border-strong); }
+.card[id] { scroll-margin-top: 96px; }
+
+.card-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  flex-wrap: wrap; gap: 14px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+.card-title {
+  font-size: 22px; font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.head-with-icon { display: flex; align-items: center; gap: 14px; }
+.icon-tile {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.head-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- 5. Chips / badges ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip .dot.pulse { animation: blink 1.8s ease-in-out infinite; }
+
+.chip-ok      { background: var(--ok-bg);   color: var(--ok-ink);   border-color: var(--ok-line); }
+.chip-warn    { background: var(--warn-bg); color: var(--warn-ink); border-color: var(--warn-line); }
+.chip-crit    { background: var(--crit-bg); color: var(--crit-ink); border-color: var(--crit-line); }
+.chip-info    { background: var(--info-bg); color: var(--info-ink); border-color: var(--info-line); }
+.chip-neutral { background: var(--line);    color: var(--ink-2);    border-color: #e2e8f0; }
+
+.chip-lg { padding: 7px 14px; font-size: 13px; text-transform: none; letter-spacing: 0; }
+.mono-chip { font-family: var(--mono); text-transform: none; letter-spacing: 0; }
+
+/* ---------- 6. Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: var(--r-sm);
+  font: 600 14px/1 var(--font);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.btn:active { transform: scale(0.98); }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.35); }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+}
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+.btn-danger {
+  background: #dc2626;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+.btn-danger:hover { background: #b91c1c; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid rgba(2, 132, 199, 0.2);
+}
+.btn-ghost:hover { background: rgba(2, 132, 199, 0.05); }
+
+.btn-sm { height: 34px; padding: 0 12px; font-size: 12.5px; }
+.btn-lg { height: 52px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; }
+.btn-block { width: 100%; }
+
+/* ---------- 7. Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 24px;
+  z-index: 60;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: var(--r-md);
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px; font-weight: 500;
+  box-shadow: var(--shadow-3);
+  opacity: 0;
+  transform: translate(-50%, 20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.ok   { background: var(--ok-ink); }
+.toast.warn { background: var(--warn-ink); }
+.toast.crit { background: var(--crit-ink); }
+
+/* ---------- 8. Animaciones ---------- */
+@keyframes blink   { 50% { opacity: 0.35; } }
+@keyframes wave    { to { transform: translate(-50%, var(--ty)) rotate(360deg); } }
+@keyframes ring {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+@keyframes flash   { from { background: var(--primary-soft); } to { background: transparent; } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- 9. Responsive (estructura general) ---------- */
+
+/* Tablet: 2 columnas, historial y eventos abajo a lo ancho */
+@media (max-width: 1279px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "tank    pump"
+      "history history"
+      "events  events";
+  }
+}
+
+/* El sidebar se vuelve menú deslizable (ver components.css) */
+@media (max-width: 1023px) {
+  .main { margin-left: 0; }
+}
+
+/* Móvil: 1 columna */
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "tank" "pump" "history" "events";
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .content { padding: 16px 16px 32px; }
+  .card { padding: 20px; border-radius: 20px; }
+  .card-title { font-size: 19px; }
+}
