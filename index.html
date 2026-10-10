@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f0f7ff" />
+  <title>AquaSense · Dashboard</title>
+
+  <!-- Tipografías del sistema de diseño Hydro-Telemetry -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Sprite de iconos (se reutilizan con <use href="#id">) ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s-6 6.4-6 11a6 6 0 0 0 12 0c0-4.6-6-11-6-11z"/></symbol>
+      <symbol id="i-signal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19.1 4.9a10 10 0 0 1 0 14.2M4.9 19.1a10 10 0 0 1 0-14.2"/></symbol>
+      <symbol id="i-pump" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 10c0-4 1.5-7 4-7s3 3 0 5l-4 2zM14 12c4 0 7 1.5 7 4s-3 3-5 0l-2-4zM12 14c0 4-1.5 7-4 7s-3-3 0-5l4-2zM10 12c-4 0-7-1.5-7-4s3-3 5 0l2 4z"/></symbol>
+      <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+      <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="app">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <div class="brand-logo"><svg class="ico"><use href="#i-drop"/></svg></div>
+        <div class="brand-text">
+          <strong>AquaSense</strong>
+          <span>NexTech IoT</span>
+        </div>
+        <span class="version">v2.4</span>
+        <button class="icon-btn close-btn" id="closeSidebar" aria-label="Cerrar menú">
+          <svg class="ico"><use href="#i-x"/></svg>
+        </button>
+      </div>
+
+      <div class="mcu-card">
+        <div class="mcu-head">
+          <span class="label-ui">Enlace MCU</span>
+          <span class="chip chip-ok" id="mcuChip"><i class="dot pulse"></i><span>Online</span></span>
+        </div>
+        <dl class="kv-list">
+          <div class="kv"><dt>Dispositivo</dt><dd>ESP32-S3</dd></div>
+          <div class="kv"><dt>Latencia</dt><dd id="latency">-- ms</dd></div>
+          <div class="kv"><dt>Fuente</dt><dd id="sourceLabel">Simulación</dd></div>
+        </dl>
+      </div>
+
+      <nav class="nav">
+        <p class="label-ui nav-label">Módulos de control</p>
+        <a href="#nivel" class="nav-item active"><svg class="ico"><use href="#i-signal"/></svg>Telemetría en vivo</a>
+        <a href="#bomba" class="nav-item"><svg class="ico"><use href="#i-pump"/></svg>Control de bomba</a>
+        <a href="#historial" class="nav-item"><svg class="ico"><use href="#i-history"/></svg>Historial</a>
+        <a href="#eventos" class="nav-item"><svg class="ico"><use href="#i-activity"/></svg>Eventos</a>
+      </nav>
+
+      <div class="safety-card">
+        <div class="safety-head">
+          <span><svg class="ico ico-sm"><use href="#i-shield"/></svg>Seguridad</span>
+          <span class="tag-armed">Armado</span>
+        </div>
+        <button class="btn btn-danger btn-block" id="emergencyBtn">
+          <svg class="ico"><use href="#i-power"/></svg>Corte bomba
+        </button>
+      </div>
+
+      <div class="sidebar-foot">
+        <span>NexTech Industrial</span>
+        <span class="sys-ok">● SYS-OK</span>
+      </div>
+    </aside>
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- ===================== CONTENIDO ===================== -->
+    <div class="main">
+
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú">
+          <svg class="ico"><use href="#i-menu"/></svg>
+        </button>
+
+        <div class="topbar-title">
+          <h1>Telemetría Hidrostática</h1>
+          <p>Supervisión en tiempo real</p>
+        </div>
+
+        <span class="chip chip-ok conn-chip" id="connChip" data-extra="conn-chip"><i class="dot pulse"></i><span>ESP32 conectado</span></span>
+
+        <div class="tank-pill">
+          <div class="tank-pill-text">
+            <span class="label-ui">Nivel tanque</span>
+            <strong id="topLevel">--%</strong>
+          </div>
+          <div class="mini-bar"><span id="topBar"></span></div>
+          <code id="topLiters">-- L</code>
+        </div>
+
+        <button class="icon-btn" id="bellBtn" aria-label="Ver eventos y alertas">
+          <svg class="ico"><use href="#i-bell"/></svg>
+          <span class="badge-dot" id="bellDot"></span>
+        </button>
+      </header>
+
+      <main class="content">
+
+        <!-- Franja de estado general -->
+        <section class="card status-strip">
+          <span class="chip chip-ok chip-lg" id="statusChip" data-extra="chip-lg"><i class="dot pulse"></i><span>¡Todo en orden!</span></span>
+          <div class="strip-item">
+            <svg class="ico ico-sm"><use href="#i-signal"/></svg>
+            Sensor JSN-SR04T · refresco <code id="pollLabel">3 s</code>
+          </div>
+          <div class="strip-item">Última lectura: <code id="lastUpdate">--:--:--</code></div>
+          <span class="chip chip-info mode-chip" id="modeChip" data-extra="mode-chip"><i class="dot"></i><span>Modo simulación</span></span>
+        </section>
+
+        <div class="grid">
+
+          <!-- ========== 1. NIVEL DEL DEPÓSITO ========== -->
+          <section class="card tank-card" id="nivel">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">Tanque principal · Nivel hidrostático</p>
+                <h2 class="card-title">Depósito Alpha-1</h2>
+              </div>
+              <span class="chip chip-ok" id="levelBadge"><i class="dot pulse"></i><span>🟢 Normal</span></span>
+            </div>
+
+            <div class="tank-stage">
+              <div class="tank-scale" aria-hidden="true">
+                <span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span>
+              </div>
+
+              <div class="tank" id="tank" data-status="normal" role="meter"
+                   aria-label="Nivel del depósito" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="tank-water" id="tankWater"></div>
+                <div class="tank-mark mark-cut" id="markCut"><span>Corte 90%</span></div>
+                <div class="tank-mark mark-low" id="markLow"><span>Bajo 50%</span></div>
+                <div class="tank-mark mark-crit" id="markCrit"><span>Crítico 20%</span></div>
+                <div class="tank-readout">
+                  <span class="label-ui">Nivel actual</span>
+                  <strong><span id="levelValue">--</span><small>%</small></strong>
+                  <code id="litersValue">-- L</code>
+                </div>
+              </div>
+
+              <div class="tank-side">
+                <div class="pod"><span class="label-ui">Distancia eco</span><code id="distValue">-- cm</code></div>
+                <div class="pod"><span class="label-ui">Tendencia</span><code id="trendValue">--</code></div>
+                <div class="pod"><span class="label-ui">Capacidad</span><code id="capValue">-- L</code></div>
+              </div>
+            </div>
+
+            <div class="level-bar-block">
+              <div class="level-bar-head">
+                <span id="levelMsg">Esperando lectura…</span>
+                <code id="levelBarValue">--%</code>
+              </div>
+              <div class="level-bar" id="levelBar" data-status="normal">
+                <span class="level-bar-fill" id="levelBarFill"></span>
+                <i class="tick" id="tickCrit"></i>
+                <i class="tick" id="tickLow"></i>
+              </div>
+              <div class="legend">
+                <span class="chip chip-ok" id="legendNormal">🟢 Normal</span>
+                <span class="chip chip-warn" id="legendLow">🟡 Bajo</span>
+                <span class="chip chip-crit" id="legendCrit">🔴 Crítico</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 2. CONTROL DE LA BOMBA ========== -->
+          <section class="card pump-card" id="bomba">
+            <div class="card-head">
+              <div class="head-with-icon">
+                <div class="icon-tile"><svg class="ico"><use href="#i-pump"/></svg></div>
+                <div>
+                  <p class="eyebrow">Módulo de actuación</p>
+                  <h2 class="card-title">Motobomba 12 V DC</h2>
+                </div>
+              </div>
+              <span class="chip chip-neutral mono-chip">Relé · GPIO 23</span>
+            </div>
+
+            <div class="pump-panel">
+              <div class="pump-state">
+                <span class="state-dot" id="pumpStateDot"></span>
+                <div>
+                  <strong id="pumpStateText">Estado: Apagada (OFF)</strong>
+                  <p id="pumpStateDesc">Relé abierto · sin consumo en la línea de 12 V</p>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg pump-btn" id="pumpBtn" aria-pressed="false">
+                <svg class="ico"><use href="#i-power"/></svg>
+                <span id="pumpBtnLabel">Encender bomba</span>
+              </button>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-text">
+                <strong>Corte anti-desborde</strong>
+                <p>Apaga la bomba al llegar al <span id="cutLabel">90</span>% del depósito.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="autoCutToggle" checked aria-label="Corte anti-desborde" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-text">
+                <strong>Llenado automático</strong>
+                <p>Enciende la bomba si el nivel baja de <span id="fillLabel">20</span>% (crítico).</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="autoFillToggle" aria-label="Llenado automático" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat"><span class="label-ui">Tensión</span><code id="voltValue">-- V</code></div>
+              <div class="stat"><span class="label-ui">Consumo</span><code id="ampValue">-- A</code></div>
+              <div class="stat"><span class="label-ui">Potencia</span><code id="wattValue">-- W</code></div>
+              <div class="stat"><span class="label-ui">Tiempo activa</span><code id="runValue">--:--</code></div>
+            </div>
+          </section>
+
+          <!-- ========== 3. HISTORIAL DE LECTURAS ========== -->
+          <section class="card history-card" id="historial">
+            <div class="card-head">
+              <div class="head-with-icon">
+                <div class="icon-tile"><svg class="ico"><use href="#i-history"/></svg></div>
+                <div>
+                  <p class="eyebrow">Registro de lecturas</p>
+                  <h2 class="card-title">Historial reciente</h2>
+                </div>
+              </div>
+              <div class="head-actions">
+                <span class="chip chip-info" id="historyCount">0 lecturas</span>
+                <button class="btn btn-ghost btn-sm" id="exportBtn"><svg class="ico ico-sm"><use href="#i-download"/></svg>CSV</button>
+                <button class="btn btn-ghost btn-sm" id="clearBtn"><svg class="ico ico-sm"><use href="#i-trash"/></svg>Limpiar</button>
+              </div>
+            </div>
+
+            <div class="chart-box">
+              <svg id="chart" class="chart" viewBox="0 0 600 180" role="img" aria-label="Gráfica del nivel del depósito en el tiempo"></svg>
+              <div class="chart-foot"><code id="chartFrom">--</code><code>Ahora</code></div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th class="num">Nivel</th>
+                    <th class="num">Volumen</th>
+                    <th>Bomba</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========== EXTRA: REGISTRO DE EVENTOS ========== -->
+          <section class="card events-card" id="eventos">
+            <div class="card-head">
+              <div class="head-with-icon">
+                <div class="icon-tile"><svg class="ico"><use href="#i-activity"/></svg></div>
+                <div>
+                  <p class="eyebrow">Transmisión de mensajería</p>
+                  <h2 class="card-title">Registro de eventos</h2>
+                </div>
+              </div>
+              <span class="chip chip-info" id="eventCount">0 eventos</span>
+            </div>
+            <ul class="event-list" id="eventList"></ul>
+          </section>
+        </div>
+
+        <!-- Ficha técnica del hardware -->
+        <section class="card spec-strip">
+          <div><span class="label-ui">Microcontrolador</span><code>ESP32-S3 Dual-Core</code></div>
+          <div><span class="label-ui">Pin disparo (TRIG)</span><code>GPIO 05</code></div>
+          <div><span class="label-ui">Pin eco (ECHO)</span><code>GPIO 18</code></div>
+          <div><span class="label-ui">Relé actuador</span><code>GPIO 23 (opto-iso)</code></div>
+          <div><span class="label-ui">Sensor</span><code>JSN-SR04T</code></div>
+          <div><span class="label-ui">Protocolo</span><code>HTTP · JSON</code></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
